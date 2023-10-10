@@ -23,10 +23,24 @@ jobs:
         run: |
           export PATH=$PATH:$(go env GOPATH)/bin
           go-bindata -pkg web -o web/bindata.go web/dist/...
-          ls -lah web/
       - name: Build ECTS application
         run: |
           GO111MODULE=on go mod download
           GO111MODULE=on GOOS=darwin go build -ldflags "-s -w" -o "bin/ects_darwin" main.go
           GO111MODULE=on GOOS=linux go build -ldflags "-s -w" -o "bin/ects_linux" main.go
           ls -lah bin/
+          echo "TAG_ANME=$(date +%Y%m%d)" >> $GITHUB_ENV
+      - uses: actions/upload-artifact@v3
+        with:
+          name: bins
+          path: bin/*
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ env.TAG_ANME }}
+          force_push_tag: true
+      - uses: ncipollo/release-action@v1
+        with:
+          commit: ${{ github.sha }}
+          tag: ${{ env.TAG_ANME }}
+          artifacts: bin/*
+          allowUpdates: true
