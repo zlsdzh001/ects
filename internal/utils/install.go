@@ -20,6 +20,7 @@ func Init() {
 		config.Conf.Database.Port,
 		config.Conf.Database.Char,
 	)
+	print(dsn)
 
 	DB, err = sql.Open("mysql", dsn)
 }
