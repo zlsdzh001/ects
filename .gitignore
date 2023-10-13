@@ -87,3 +87,5 @@ fabric.properties
 # Binary file
 bin/ects_*
 dist
+
+.vscode
